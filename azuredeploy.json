@@ -1,4 +1,4 @@
-﻿{
+{
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
@@ -75,6 +75,9 @@
                     "containerName": {
                       "type": "string"
                     },
+                    "operation": {
+                      "type": "string"
+                    },
                     "resourceGroup": {
                       "type": "string"
                     },
@@ -116,7 +119,7 @@
                 ]
               }
             },
-            "Invoke_Backup": {
+            "Invoke_Management_API": {
               "runAfter": {
                 "Create_Authentication_Header": [
                   "Succeeded"
@@ -130,7 +133,7 @@
                 },
                 "body": {
                   "accessKey": "@{triggerBody()?['accessKey']}",
-                  "backupname": "@{concat(triggerBody()?['backupName'],'_',convertFromUtc(utcNow(),'New Zealand Standard Time','yyyyMMdd'))}",
+                  "backupname": "@{triggerBody()?['backupName']}",
                   "containerName": "@{triggerBody()?['containerName']}",
                   "storageAccount": "@{triggerBody()?['storageAccount']}"
                 },
@@ -138,7 +141,7 @@
                   "Content-Type": "application/json"
                 },
                 "method": "POST",
-                "uri": "https://management.azure.com/subscriptions/@{triggerBody()?['subscriptionId']}/resourceGroups/@{triggerBody()?['resourceGroup']}/providers/Microsoft.ApiManagement/service/@{triggerBody()?['apimInstance']}/backup?api-version=2014-02-14"
+                "uri": "https://management.azure.com/subscriptions/@{triggerBody()?['subscriptionId']}/resourceGroups/@{triggerBody()?['resourceGroup']}/providers/Microsoft.ApiManagement/service/@{triggerBody()?['apimInstance']}/@{triggerBody()?['operation']}?api-version=2014-02-14"
               }
             },
             "Request_Auhtentication_Token": {
